@@ -15,18 +15,27 @@ protocol ChatEngineDelegate: AnyObject {
 
 enum ChatEngineError: Error {
   case didNotStartEngine
+  case unableToStartEngine(message: String)
+}
+
+enum ChatEngineState {
+  case idle, running, ended
 }
 
 final class ChatEngine {
   
   private var passthrough: CurrentValueSubject<Message, Never>!
   private var cancellables: Set<AnyCancellable> = Set<AnyCancellable>()
+  private var state: ChatEngineState = .idle
   weak var delegate: ChatEngineDelegate?
   
-  var isRunning: Bool = false
   var currentMessageID: String { passthrough.value.id }
   
-  func start(initialValue: Message) {
+  func start(initialValue: Message) throws {
+    guard state == .ended || passthrough == nil else {
+      throw ChatEngineError.unableToStartEngine(message: "There is still an active session")
+    }
+    
     passthrough = CurrentValueSubject<Message, Never>(initialValue)
     passthrough
       .buffer(size: 20, prefetch: .keepFull, whenFull: .dropOldest)
@@ -61,8 +70,9 @@ final class ChatEngine {
         if self.passthrough.value.tag.contains("bye") {
           self.delegate?.chatEngine(self, finishedConversation: true)
           self.passthrough.send(completion: .finished)
+          self.state = .ended
         }
-        self.isRunning = false
+        self.state = .idle
       }
       .store(in: &cancellables)
   }
@@ -72,9 +82,9 @@ final class ChatEngine {
       throw ChatEngineError.didNotStartEngine
     }
     
-    if !isRunning {
+    if state == .idle {
       passthrough.send(message)
-      isRunning = true
+      state = .running
     }
   }
   

@@ -21,6 +21,7 @@
 		33B21B412799DFD9009F9188 /* ChatPieceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B402799DFD9009F9188 /* ChatPieceType.swift */; };
 		33B21B432799DFE5009F9188 /* BotPiece.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B422799DFE5009F9188 /* BotPiece.swift */; };
 		33B21B45279A0119009F9188 /* ChatEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B44279A0119009F9188 /* ChatEngine.swift */; };
+		33B21B47279B0921009F9188 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B46279B0921009F9188 /* Store.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		33B21B402799DFD9009F9188 /* ChatPieceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPieceType.swift; sourceTree = "<group>"; };
 		33B21B422799DFE5009F9188 /* BotPiece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotPiece.swift; sourceTree = "<group>"; };
 		33B21B44279A0119009F9188 /* ChatEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatEngine.swift; sourceTree = "<group>"; };
+		33B21B46279B0921009F9188 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,12 +79,12 @@
 				33B21B312798ABDF009F9188 /* Model */,
 				33B21B1D2798ABD7009F9188 /* AppDelegate.swift */,
 				33B21B1F2798ABD7009F9188 /* SceneDelegate.swift */,
-				33B21B212798ABD7009F9188 /* ViewController.swift */,
 				33B21B44279A0119009F9188 /* ChatEngine.swift */,
 				33B21B262798ABD9009F9188 /* Assets.xcassets */,
 				33B21B282798ABD9009F9188 /* LaunchScreen.storyboard */,
 				33B21B2B2798ABD9009F9188 /* Info.plist */,
 				33B21B3E2799DFC3009F9188 /* Extensions.swift */,
+				33B21B46279B0921009F9188 /* Store.swift */,
 			);
 			path = AllOrNothing;
 			sourceTree = "<group>";
@@ -111,6 +113,7 @@
 		33B21B332798ABF0009F9188 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				33B21B212798ABD7009F9188 /* ViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -189,6 +192,7 @@
 				33B21B222798ABD7009F9188 /* ViewController.swift in Sources */,
 				33B21B372798B400009F9188 /* UnknownStringKey.swift in Sources */,
 				33B21B392798B40D009F9188 /* Message.swift in Sources */,
+				33B21B47279B0921009F9188 /* Store.swift in Sources */,
 				33B21B45279A0119009F9188 /* ChatEngine.swift in Sources */,
 				33B21B412799DFD9009F9188 /* ChatPieceType.swift in Sources */,
 				33B21B3F2799DFC3009F9188 /* Extensions.swift in Sources */,

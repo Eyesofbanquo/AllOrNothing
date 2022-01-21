@@ -26,7 +26,6 @@ extension MessageList {
 class ViewController: UIViewController {
   
   /* Should be in a loader */
-  private(set) var messages: [String: Message] = [:]
   var cancellables: Set<AnyCancellable> = Set<AnyCancellable>()
   lazy var passthrough = PassthroughSubject<Message, Never>()
   lazy var tableView: UITableView = {
@@ -40,6 +39,9 @@ class ViewController: UIViewController {
   }()
   lazy var conversation: Conversation = Conversation()
   lazy var chatEngine: ChatEngine = ChatEngine()
+  lazy var loader: MessageLoader = MessageLoader()
+  lazy var store: MessageStore = MessageStore()
+  lazy var lessonManager: LessonManager = LessonManager()
   
   // MARK: - Lifecycle -
   
@@ -64,24 +66,19 @@ class ViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    /* Hook up table view */
-    //    tableView.delegate = self
     tableView.dataSource = self
     chatEngine.delegate = self
-    
-    /* Decode Messages */
-    let json = Bundle.main.path(forResource: "allornothing", ofType: "json")
     do {
-      guard let validJSONString = json else { return }
-      let data = try Data(contentsOf: URL(fileURLWithPath: validJSONString), options: .mappedIfSafe)
-      let messageList = try JSONDecoder().decode(MessageList.self, from: data)
-      self.messages = messageList.messages
+      let loadedMessages = try loader.load(fromPath: "allornothing", ofType: "json")
+      store.store(messages: loadedMessages, shouldReplace: true)
+      lessonManager.set(lesson: .allOrNothing, fromStore: store)
+      let firstMessage = try lessonManager.retrieveStartOfLesson()
+      try chatEngine.start(initialValue: firstMessage)
     } catch {
       print(error)
     }
     
-    chatEngine.start(initialValue: messages["EIC"]!)
+   
   }
   
   
@@ -100,7 +97,7 @@ extension ViewController: ChatEngineDelegate {
 
 extension ViewController: ChatPieceTableViewCellDelegate {
   func chatPieceDelegate(chatPieceCell: ChatPieceTableViewCell, didSelectAnswerChoice choiceId: String) {
-    guard let message = messages[choiceId] else { return }
+    guard let message = lessonManager.lesson[choiceId] else { return }
     do {
       try chatEngine.send(message: message)
     } catch {
@@ -122,7 +119,6 @@ extension ViewController: UITableViewDataSource {
           let piece = conversation[indexPath.row] else { return cell }
     
     chatPieceCell.configure(usingPiece: piece)
-    /* only add delegate if current id | remove if not*/
     chatPieceCell.delegate = chatEngine.currentMessageID == piece.id ? self : nil
     return chatPieceCell
   }
