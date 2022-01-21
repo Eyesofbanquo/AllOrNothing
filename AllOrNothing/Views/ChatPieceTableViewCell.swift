@@ -138,7 +138,6 @@ final class ChatPieceTableViewCell: UITableViewCell {
           contentStackView.addArrangedSubview(button)
         }
       case .bot:
-//        contentStackView.addArrangedSubview(label)
         containerView.addSubview(label)
         containerView.backgroundColor = .white
         containerView.layer.cornerRadius = 4.0

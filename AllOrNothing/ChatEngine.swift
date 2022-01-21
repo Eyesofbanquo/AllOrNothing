@@ -26,7 +26,8 @@ final class ChatEngine {
   
   private var passthrough: CurrentValueSubject<Message, Never>!
   private var cancellables: Set<AnyCancellable> = Set<AnyCancellable>()
-  private var state: ChatEngineState = .idle
+  
+  var state: ChatEngineState = .idle
   weak var delegate: ChatEngineDelegate?
   
   var currentMessageID: String { passthrough.value.id }
@@ -59,20 +60,13 @@ final class ChatEngine {
       }
       .receive(on: DispatchQueue.main)
       .sink { piece in
-        switch piece.type {
-          case .user:
-            print(piece.text.components(separatedBy: "|").joined(separator: " ").trimmingCharacters(in: CharacterSet(charactersIn: " ")), piece.routes.components(separatedBy: "|").joined(separator: " ").trimmingCharacters(in: CharacterSet(charactersIn: " ")))
-          case .bot:
-            print(piece.text)
-        }
         self.delegate?.chatEngine(self, emittedChatPiece: piece)
+        self.state = self.passthrough.value.tag.contains("bye") ? .ended : .idle
         
-        if self.passthrough.value.tag.contains("bye") {
+        if self.state == .ended, piece.type == .user {
           self.delegate?.chatEngine(self, finishedConversation: true)
           self.passthrough.send(completion: .finished)
-          self.state = .ended
-        }
-        self.state = .idle
+        } 
       }
       .store(in: &cancellables)
   }
@@ -81,7 +75,7 @@ final class ChatEngine {
     guard passthrough != nil else {
       throw ChatEngineError.didNotStartEngine
     }
-    
+
     if state == .idle {
       passthrough.send(message)
       state = .running

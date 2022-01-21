@@ -12,7 +12,7 @@ protocol ChatViewDelegate: AnyObject {
   var numberOfConversationPieces: Int { get }
   var currentMessageID: String { get }
   func retrievePiece(atIndex index: IndexPath) -> BotPiece?
-  func setChatPieceCellDelegate(chatPieceCell: inout ChatPieceTableViewCell, forId id: String)
+  func setChatPieceCellDelegate(chatPieceCell: inout ChatPieceTableViewCell, forPiece piece: BotPiece)
 }
 
 final class ChatView: UIView {
@@ -72,7 +72,7 @@ extension ChatView: UITableViewDataSource {
           let piece = delegate?.retrievePiece(atIndex: indexPath) else { return cell }
     
     chatPieceCell.configure(usingPiece: piece)
-    delegate?.setChatPieceCellDelegate(chatPieceCell: &chatPieceCell, forId: piece.id)
+    delegate?.setChatPieceCellDelegate(chatPieceCell: &chatPieceCell, forPiece: piece)
     return chatPieceCell
   }
   

@@ -26,6 +26,10 @@
 		33B21B4B279B1FA1009F9188 /* MessageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B4A279B1FA1009F9188 /* MessageLoader.swift */; };
 		33B21B4D279B201E009F9188 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B4C279B201E009F9188 /* ChatView.swift */; };
 		33B21B4F279B206D009F9188 /* MessageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B4E279B206D009F9188 /* MessageList.swift */; };
+		33B21B52279B26C9009F9188 /* TransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B51279B26C9009F9188 /* TransitioningDelegate.swift */; };
+		33B21B54279B279A009F9188 /* PresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B53279B279A009F9188 /* PresentationController.swift */; };
+		33B21B56279B2809009F9188 /* EndViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B55279B2809009F9188 /* EndViewController.swift */; };
+		33B21B58279B280E009F9188 /* EndView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B57279B280E009F9188 /* EndView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +54,10 @@
 		33B21B4A279B1FA1009F9188 /* MessageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageLoader.swift; sourceTree = "<group>"; };
 		33B21B4C279B201E009F9188 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		33B21B4E279B206D009F9188 /* MessageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageList.swift; sourceTree = "<group>"; };
+		33B21B51279B26C9009F9188 /* TransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitioningDelegate.swift; sourceTree = "<group>"; };
+		33B21B53279B279A009F9188 /* PresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationController.swift; sourceTree = "<group>"; };
+		33B21B55279B2809009F9188 /* EndViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndViewController.swift; sourceTree = "<group>"; };
+		33B21B57279B280E009F9188 /* EndView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +90,7 @@
 		33B21B1C2798ABD7009F9188 /* AllOrNothing */ = {
 			isa = PBXGroup;
 			children = (
+				33B21B50279B26BF009F9188 /* Presentation */,
 				33B21B332798ABF0009F9188 /* Controllers */,
 				33B21B322798ABEB009F9188 /* Views */,
 				33B21B312798ABDF009F9188 /* Model */,
@@ -117,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				33B21B3A2799DF7D009F9188 /* ChatPieceTableViewCell.swift */,
+				33B21B57279B280E009F9188 /* EndView.swift */,
 				33B21B4C279B201E009F9188 /* ChatView.swift */,
 			);
 			path = Views;
@@ -126,8 +136,18 @@
 			isa = PBXGroup;
 			children = (
 				33B21B212798ABD7009F9188 /* ViewController.swift */,
+				33B21B55279B2809009F9188 /* EndViewController.swift */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		33B21B50279B26BF009F9188 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				33B21B51279B26C9009F9188 /* TransitioningDelegate.swift */,
+				33B21B53279B279A009F9188 /* PresentationController.swift */,
+			);
+			path = Presentation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -211,11 +231,15 @@
 				33B21B4D279B201E009F9188 /* ChatView.swift in Sources */,
 				33B21B3F2799DFC3009F9188 /* Extensions.swift in Sources */,
 				33B21B4B279B1FA1009F9188 /* MessageLoader.swift in Sources */,
+				33B21B58279B280E009F9188 /* EndView.swift in Sources */,
 				33B21B1E2798ABD7009F9188 /* AppDelegate.swift in Sources */,
+				33B21B54279B279A009F9188 /* PresentationController.swift in Sources */,
 				33B21B3D2799DF9A009F9188 /* Conversation.swift in Sources */,
 				33B21B3B2799DF7D009F9188 /* ChatPieceTableViewCell.swift in Sources */,
 				33B21B4F279B206D009F9188 /* MessageList.swift in Sources */,
+				33B21B52279B26C9009F9188 /* TransitioningDelegate.swift in Sources */,
 				33B21B432799DFE5009F9188 /* BotPiece.swift in Sources */,
+				33B21B56279B2809009F9188 /* EndViewController.swift in Sources */,
 				33B21B202798ABD7009F9188 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

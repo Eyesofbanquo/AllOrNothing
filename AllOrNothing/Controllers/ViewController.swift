@@ -14,6 +14,7 @@ protocol ViewControllerViewDelegate {
 
 class ViewController: UIViewController {
   
+  lazy var endGameTransitioningDelegate = TransitioningDelegate()
   lazy var conversation: Conversation = Conversation()
   lazy var chatEngine: ChatEngine = ChatEngine()
   lazy var loader: MessageLoader = MessageLoader()
@@ -62,20 +63,33 @@ extension ViewController: ChatPieceTableViewCellDelegate {
   func chatPieceDelegate(chatPieceCell: ChatPieceTableViewCell, didSelectAnswerChoice choiceId: String) {
     guard let message = lessonManager.lesson[choiceId] else { return }
     do {
-      try chatEngine.send(message: message)
+      if chatEngine.state == .ended {
+        let endController = EndViewController()
+        endController.modalPresentationStyle = .custom
+        endController.transitioningDelegate = endGameTransitioningDelegate
+        self.present(endController, animated: true)
+      } else {
+        try chatEngine.send(message: message)
+      }
     } catch {
       print(error)
     }
   }
   
   func chatEngine(_ chatEngine: ChatEngine, finishedConversation finished: Bool) {
+    guard chatEngine.state == .ended else { return }
+    
     print("We're done")
   }
 }
 
 extension ViewController: ChatViewDelegate {
-  func setChatPieceCellDelegate(chatPieceCell: inout ChatPieceTableViewCell, forId id: String) {
-    chatPieceCell.delegate = chatEngine.currentMessageID == id ? self : nil
+  func setChatPieceCellDelegate(chatPieceCell: inout ChatPieceTableViewCell, forPiece piece: BotPiece) {
+    guard piece.type == .user else {
+      chatPieceCell.delegate = nil
+      return
+    }
+    chatPieceCell.delegate = chatEngine.currentMessageID == piece.id ? self : nil
   }
   
   var currentMessageID: String {
