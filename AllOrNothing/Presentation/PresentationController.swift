@@ -13,7 +13,7 @@ final class PresentationController: UIPresentationController {
   lazy var dimmingView: UIView = setupDimmingView()
   
   lazy var blurEffectView: UIVisualEffectView = {
-    let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
+    let blurEffect = UIBlurEffect(style: .systemMaterialDark)
     let blurView = UIVisualEffectView(effect: blurEffect)
     blurView.translatesAutoresizingMaskIntoConstraints = false
     blurView.alpha = 0.0

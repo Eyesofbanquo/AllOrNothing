@@ -9,12 +9,22 @@ import Foundation
 import UIKit
 import SwiftUI
 
-final class EndViewController: UIViewController {
+final class ViewPresenter<Content>: UIViewController where Content: View {
+  
+  var rootView: Content
+  init(rootView: Content) {
+    self.rootView = rootView
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    let hostingController = UIHostingController(rootView: EndView())
+    let hostingController = UIHostingController(rootView: rootView)
     hostingController.view.translatesAutoresizingMaskIntoConstraints = false
     self.addChild(hostingController)
     self.view.addSubview(hostingController.view)

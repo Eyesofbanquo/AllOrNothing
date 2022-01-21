@@ -16,6 +16,7 @@ struct EndView: View {
         .aspectRatio(contentMode: .fit)
         .scaleEffect(x: 0.65, y: 0.65)
       Text("You've completed the code test!")
+        .font(.callout)
     }
     .padding()
   }

@@ -54,7 +54,7 @@ final class ChatEngine {
         
         return array.publisher
           .flatMap(maxPublishers: .max(1)) {
-            Just($0).delay(for: 2.0, scheduler: RunLoop.main)
+            Just($0).delay(for: 1.5, scheduler: RunLoop.main)
           }
           .eraseToAnyPublisher()
       }

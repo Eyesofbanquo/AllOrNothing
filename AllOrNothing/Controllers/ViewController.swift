@@ -14,6 +14,7 @@ protocol ViewControllerViewDelegate {
 
 class ViewController: UIViewController {
   
+  var displayOnboarding: Bool = true
   lazy var endGameTransitioningDelegate = TransitioningDelegate()
   lazy var conversation: Conversation = Conversation()
   lazy var chatEngine: ChatEngine = ChatEngine()
@@ -38,15 +39,15 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     chatEngine.delegate = self
-    do {
-      let loadedMessages = try loader.load(fromPath: "allornothing", ofType: "json")
-      store.store(messages: loadedMessages, shouldReplace: true)
-      lessonManager.set(lesson: .allOrNothing, fromStore: store)
-      let firstMessage = try lessonManager.retrieveStartOfLesson()
-      try chatEngine.start(initialValue: firstMessage)
-    } catch {
-      /* Handle errors here with starting a lesson */
-      print(error)
+  }
+  
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    
+    guard displayOnboarding else { return }
+    let onboardingViewController = ViewPresenter(rootView: OnboardingView(delegate: self))
+    self.present(onboardingViewController, animated: true) {
+      self.displayOnboarding = false
     }
   }
 }
@@ -64,7 +65,7 @@ extension ViewController: ChatPieceTableViewCellDelegate {
     guard let message = lessonManager.lesson[choiceId] else { return }
     do {
       if chatEngine.state == .ended {
-        let endController = EndViewController()
+        let endController = ViewPresenter(rootView: EndView())
         endController.modalPresentationStyle = .custom
         endController.transitioningDelegate = endGameTransitioningDelegate
         self.present(endController, animated: true)
@@ -102,5 +103,20 @@ extension ViewController: ChatViewDelegate {
   
   var numberOfConversationPieces: Int {
     conversation.numberOfItems()
+  }
+}
+
+extension ViewController: OnboardingViewDelegate {
+  func begin() {
+    do {
+      let loadedMessages = try loader.load(fromPath: "allornothing", ofType: "json")
+      store.store(messages: loadedMessages, shouldReplace: true)
+      lessonManager.set(lesson: .allOrNothing, fromStore: store)
+      let firstMessage = try lessonManager.retrieveStartOfLesson()
+      try chatEngine.start(initialValue: firstMessage)
+    } catch {
+      /* Handle errors here with starting a lesson */
+      print(error)
+    }
   }
 }

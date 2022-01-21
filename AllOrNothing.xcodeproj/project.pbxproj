@@ -30,6 +30,7 @@
 		33B21B54279B279A009F9188 /* PresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B53279B279A009F9188 /* PresentationController.swift */; };
 		33B21B56279B2809009F9188 /* EndViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B55279B2809009F9188 /* EndViewController.swift */; };
 		33B21B58279B280E009F9188 /* EndView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B57279B280E009F9188 /* EndView.swift */; };
+		33B21B5A279B324C009F9188 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B59279B324C009F9188 /* OnboardingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 		33B21B53279B279A009F9188 /* PresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationController.swift; sourceTree = "<group>"; };
 		33B21B55279B2809009F9188 /* EndViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndViewController.swift; sourceTree = "<group>"; };
 		33B21B57279B280E009F9188 /* EndView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndView.swift; sourceTree = "<group>"; };
+		33B21B59279B324C009F9188 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +129,7 @@
 			children = (
 				33B21B3A2799DF7D009F9188 /* ChatPieceTableViewCell.swift */,
 				33B21B57279B280E009F9188 /* EndView.swift */,
+				33B21B59279B324C009F9188 /* OnboardingView.swift */,
 				33B21B4C279B201E009F9188 /* ChatView.swift */,
 			);
 			path = Views;
@@ -227,6 +230,7 @@
 				33B21B49279B1F97009F9188 /* LessonManager.swift in Sources */,
 				33B21B47279B0921009F9188 /* Store.swift in Sources */,
 				33B21B45279A0119009F9188 /* ChatEngine.swift in Sources */,
+				33B21B5A279B324C009F9188 /* OnboardingView.swift in Sources */,
 				33B21B412799DFD9009F9188 /* ChatPieceType.swift in Sources */,
 				33B21B4D279B201E009F9188 /* ChatView.swift in Sources */,
 				33B21B3F2799DFC3009F9188 /* Extensions.swift in Sources */,
