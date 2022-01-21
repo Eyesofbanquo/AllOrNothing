@@ -22,6 +22,8 @@
 		33B21B432799DFE5009F9188 /* BotPiece.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B422799DFE5009F9188 /* BotPiece.swift */; };
 		33B21B45279A0119009F9188 /* ChatEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B44279A0119009F9188 /* ChatEngine.swift */; };
 		33B21B47279B0921009F9188 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B46279B0921009F9188 /* Store.swift */; };
+		33B21B49279B1F97009F9188 /* LessonManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B48279B1F97009F9188 /* LessonManager.swift */; };
+		33B21B4B279B1FA1009F9188 /* MessageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B21B4A279B1FA1009F9188 /* MessageLoader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +44,8 @@
 		33B21B422799DFE5009F9188 /* BotPiece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotPiece.swift; sourceTree = "<group>"; };
 		33B21B44279A0119009F9188 /* ChatEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatEngine.swift; sourceTree = "<group>"; };
 		33B21B46279B0921009F9188 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		33B21B48279B1F97009F9188 /* LessonManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonManager.swift; sourceTree = "<group>"; };
+		33B21B4A279B1FA1009F9188 /* MessageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +89,8 @@
 				33B21B2B2798ABD9009F9188 /* Info.plist */,
 				33B21B3E2799DFC3009F9188 /* Extensions.swift */,
 				33B21B46279B0921009F9188 /* Store.swift */,
+				33B21B4A279B1FA1009F9188 /* MessageLoader.swift */,
+				33B21B48279B1F97009F9188 /* LessonManager.swift */,
 			);
 			path = AllOrNothing;
 			sourceTree = "<group>";
@@ -192,10 +198,12 @@
 				33B21B222798ABD7009F9188 /* ViewController.swift in Sources */,
 				33B21B372798B400009F9188 /* UnknownStringKey.swift in Sources */,
 				33B21B392798B40D009F9188 /* Message.swift in Sources */,
+				33B21B49279B1F97009F9188 /* LessonManager.swift in Sources */,
 				33B21B47279B0921009F9188 /* Store.swift in Sources */,
 				33B21B45279A0119009F9188 /* ChatEngine.swift in Sources */,
 				33B21B412799DFD9009F9188 /* ChatPieceType.swift in Sources */,
 				33B21B3F2799DFC3009F9188 /* Extensions.swift in Sources */,
+				33B21B4B279B1FA1009F9188 /* MessageLoader.swift in Sources */,
 				33B21B1E2798ABD7009F9188 /* AppDelegate.swift in Sources */,
 				33B21B3D2799DF9A009F9188 /* Conversation.swift in Sources */,
 				33B21B3B2799DF7D009F9188 /* ChatPieceTableViewCell.swift in Sources */,
