@@ -8,65 +8,34 @@
 import Combine
 import UIKit
 
-struct MessageList: Decodable {
-  var messages: [String: Message]
+protocol ViewControllerViewDelegate {
+  func viewControllerViewDelegate(_ viewDelegate: ChatViewDelegate, insertPiece piece: BotPiece, at indexPath: IndexPath)
 }
-
-extension MessageList {
-  init(from decoder: Decoder) throws {
-    let container = try decoder.container(keyedBy: UnknownStringKey.self)
-    self.messages = [:]
-    for key in container.allKeys {
-      self.messages[key.stringValue] = try container.decode(Message.self, forKey: key)
-    }
-  }
-}
-
 
 class ViewController: UIViewController {
   
-  /* Should be in a loader */
-  var cancellables: Set<AnyCancellable> = Set<AnyCancellable>()
-  lazy var passthrough = PassthroughSubject<Message, Never>()
-  lazy var tableView: UITableView = {
-    let tv = UITableView()
-    tv.translatesAutoresizingMaskIntoConstraints = false
-    tv.backgroundColor = .init(hexString: "#CCDBDC")
-    tv.separatorStyle = .none
-    tv.register(ChatPieceTableViewCell.self,
-                forCellReuseIdentifier: ChatPieceTableViewCell.reuseIdentifier)
-    return tv
-  }()
   lazy var conversation: Conversation = Conversation()
   lazy var chatEngine: ChatEngine = ChatEngine()
   lazy var loader: MessageLoader = MessageLoader()
   lazy var store: MessageStore = MessageStore()
   lazy var lessonManager: LessonManager = LessonManager()
   
+  var chatView: ViewControllerViewDelegate? {
+    self.view as? ViewControllerViewDelegate
+  }
+  
   // MARK: - Lifecycle -
   
   override func loadView() {
-    let backgroundView = UIView()
-    backgroundView.backgroundColor = .init(hexString: "#CCDBDC")
+    let chatView = ChatView()
+    chatView.translatesAutoresizingMaskIntoConstraints = false
+    chatView.delegate = self
     
-    backgroundView.addSubview(tableView)
-    NSLayoutConstraint.activate([
-      tableView.safeAreaLayoutGuide.leadingAnchor.constraint(equalTo: backgroundView.safeAreaLayoutGuide.leadingAnchor, constant: 8.0),
-      
-      tableView.safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: backgroundView.safeAreaLayoutGuide.trailingAnchor, constant: -8.0),
-      
-      tableView.safeAreaLayoutGuide.topAnchor.constraint(equalTo: backgroundView.safeAreaLayoutGuide.topAnchor, constant: 8.0),
-      
-      tableView.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: backgroundView.safeAreaLayoutGuide.bottomAnchor, constant: -8.0)
-    ])
-    
-    
-    self.view = backgroundView
+    self.view = chatView
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    tableView.dataSource = self
     chatEngine.delegate = self
     do {
       let loadedMessages = try loader.load(fromPath: "allornothing", ofType: "json")
@@ -75,23 +44,17 @@ class ViewController: UIViewController {
       let firstMessage = try lessonManager.retrieveStartOfLesson()
       try chatEngine.start(initialValue: firstMessage)
     } catch {
+      /* Handle errors here with starting a lesson */
       print(error)
     }
-    
-   
   }
-  
-  
 }
 
 extension ViewController: ChatEngineDelegate {
   func chatEngine(_ chatEngine: ChatEngine, emittedChatPiece piece: BotPiece) {
     self.conversation.add(piece: piece)
-    self.tableView.beginUpdates()
-    self.tableView.insertRows(at: [IndexPath(row: self.conversation.numberOfItems() - 1 < 0 ? 0 : self.conversation.numberOfItems() - 1, section: 0)], with: .top)
-    
-    self.tableView.endUpdates()
-    self.tableView.scrollToRow(at: IndexPath(row: self.conversation.numberOfItems() - 1 < 0 ? 0 : self.conversation.numberOfItems() - 1, section: 0), at: .top, animated: true)
+    let newIndexPath = IndexPath(row: self.conversation.numberOfItems() - 1 < 0 ? 0 : self.conversation.numberOfItems() - 1, section: 0)
+    chatView?.viewControllerViewDelegate(self, insertPiece: piece, at: newIndexPath)
   }
 }
 
@@ -110,21 +73,20 @@ extension ViewController: ChatPieceTableViewCellDelegate {
   }
 }
 
-extension ViewController: UITableViewDataSource {
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: ChatPieceTableViewCell.reuseIdentifier, for: indexPath)
-    cell.contentView.isUserInteractionEnabled = false
-    cell.selectionStyle = .none
-    guard let chatPieceCell = cell as? ChatPieceTableViewCell,
-          let piece = conversation[indexPath.row] else { return cell }
-    
-    chatPieceCell.configure(usingPiece: piece)
-    chatPieceCell.delegate = chatEngine.currentMessageID == piece.id ? self : nil
-    return chatPieceCell
+extension ViewController: ChatViewDelegate {
+  func setChatPieceCellDelegate(chatPieceCell: inout ChatPieceTableViewCell, forId id: String) {
+    chatPieceCell.delegate = chatEngine.currentMessageID == id ? self : nil
   }
   
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return conversation.numberOfItems()
+  var currentMessageID: String {
+    chatEngine.currentMessageID
+  }
+  
+  func retrievePiece(atIndex index: IndexPath) -> BotPiece? {
+    conversation[index.row]
+  }
+  
+  var numberOfConversationPieces: Int {
+    conversation.numberOfItems()
   }
 }
-
