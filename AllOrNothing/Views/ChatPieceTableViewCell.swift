@@ -28,6 +28,7 @@ final class ChatPieceTableViewCell: UITableViewCell {
     self.backgroundColor = .clear
     containerView.translatesAutoresizingMaskIntoConstraints = false
     contentStackView.translatesAutoresizingMaskIntoConstraints = false
+    scrollView.translatesAutoresizingMaskIntoConstraints = false
     
     label.translatesAutoresizingMaskIntoConstraints = false
     label.numberOfLines = 0
@@ -35,14 +36,14 @@ final class ChatPieceTableViewCell: UITableViewCell {
     
     contentStackView.axis = .horizontal
     contentStackView.spacing = 4.0
-    contentStackView.alignment = .firstBaseline
-    contentStackView.distribution = .equalSpacing
+    contentStackView.alignment = .center
+    contentStackView.distribution = .fillProportionally
     
-    containerView.addSubview(contentStackView)
+    scrollView.addSubview(contentStackView)
+    containerView.addSubview(scrollView)
     self.addSubview(containerView)
     
-    NSLayoutConstraint.activate(ContentStackViewConstraints)
-
+    NSLayoutConstraint.activate(ScrollConstraints)
   }
   
   override func prepareForReuse() {
@@ -54,8 +55,12 @@ final class ChatPieceTableViewCell: UITableViewCell {
     }
     guard type != nil else { return }
     switch type! {
-    case .user: NSLayoutConstraint.deactivate(UserBubbleConstraints)
-    case .bot: NSLayoutConstraint.deactivate(BotBubbleConstraints)
+    case .user:
+        NSLayoutConstraint.deactivate(UserBubbleConstraints)
+        NSLayoutConstraint.deactivate(ContentStackViewConstraintsScroll)
+    case .bot:
+        label.removeFromSuperview()
+        NSLayoutConstraint.deactivate(BotBubbleConstraints)
     }
   }
   
@@ -67,27 +72,42 @@ final class ChatPieceTableViewCell: UITableViewCell {
     contentStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8.0),
     contentStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8.0),
     contentStackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8.0),
-    contentStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8.0)
+    contentStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8.0),
+  ]
+  
+  lazy var ContentStackViewConstraintsScroll: [NSLayoutConstraint] = [
+    contentStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+    contentStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+    contentStackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+    contentStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+    contentStackView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
+  ]
+  
+  lazy var ScrollConstraints: [NSLayoutConstraint] = [
+    scrollView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+    scrollView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+    scrollView.topAnchor.constraint(equalTo: containerView.topAnchor),
+    scrollView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
   ]
   
   lazy var WidthConstraint: NSLayoutConstraint = {
     let widthConstraint = containerView.widthAnchor.constraint(lessThanOrEqualToConstant: bounds.width * 0.80)
-    widthConstraint.priority = UILayoutPriority(rawValue: 1000)
+    widthConstraint.priority = .required
     return widthConstraint
   }()
   
   lazy var UserBubbleConstraints = [
-    WidthConstraint,
+    containerView.widthAnchor.constraint(equalToConstant: bounds.width * 0.80),
     containerView.safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -4.0),
     containerView.safeAreaLayoutGuide.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 4.0),
     containerView.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -4.0)
   ]
   
   lazy var BotBubbleConstraints = [
-    contentStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8.0),
-    contentStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8.0),
-    contentStackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8.0),
-    contentStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8.0),
+    label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8.0),
+    label.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8.0),
+    label.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8.0),
+    label.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8.0),
     WidthConstraint,
     containerView.safeAreaLayoutGuide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 4.0),
     containerView.safeAreaLayoutGuide.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 4.0),
@@ -96,10 +116,10 @@ final class ChatPieceTableViewCell: UITableViewCell {
   
   func configure(usingPiece piece: BotPiece) {
     self.type = piece.type
-    self.setNeedsLayout()
-    self.layoutIfNeeded()
     switch piece.type {
       case .user:
+        NSLayoutConstraint.activate(UserBubbleConstraints)
+        NSLayoutConstraint.activate(ContentStackViewConstraintsScroll)
         for (index, reply) in piece.textArray.enumerated() {
           var config = UIButton.Configuration.filled()
           config.baseBackgroundColor = .init(hexString: "#63C7B2")
@@ -117,10 +137,9 @@ final class ChatPieceTableViewCell: UITableViewCell {
           
           contentStackView.addArrangedSubview(button)
         }
-        NSLayoutConstraint.activate(UserBubbleConstraints)
-        
       case .bot:
-        contentStackView.addArrangedSubview(label)
+//        contentStackView.addArrangedSubview(label)
+        containerView.addSubview(label)
         containerView.backgroundColor = .white
         containerView.layer.cornerRadius = 4.0
         containerView.layer.shouldRasterize = true
