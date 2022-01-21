@@ -23,12 +23,14 @@ final class ChatEngine {
   private var cancellables: Set<AnyCancellable> = Set<AnyCancellable>()
   weak var delegate: ChatEngineDelegate?
   
+  var isRunning: Bool = false
   var currentMessageID: String { passthrough.value.id }
   
   func start(initialValue: Message) {
     passthrough = CurrentValueSubject<Message, Never>(initialValue)
     passthrough
       .buffer(size: 20, prefetch: .keepFull, whenFull: .dropOldest)
+      .removeDuplicates(by: { $0.id == $1.id })
       .flatMap(maxPublishers: .max(1)) { message -> AnyPublisher<BotPiece, Never> in
         var array: [BotPiece] = []
         array.append(contentsOf: message.text.map { BotPiece(id: message.id, type: .bot, text: $0, routes: message.id)})
@@ -60,6 +62,7 @@ final class ChatEngine {
           self.delegate?.chatEngine(self, finishedConversation: true)
           self.passthrough.send(completion: .finished)
         }
+        self.isRunning = false
       }
       .store(in: &cancellables)
   }
@@ -68,7 +71,11 @@ final class ChatEngine {
     guard passthrough != nil else {
       throw ChatEngineError.didNotStartEngine
     }
-    passthrough.send(message)
+    
+    if !isRunning {
+      passthrough.send(message)
+      isRunning = true
+    }
   }
   
   
